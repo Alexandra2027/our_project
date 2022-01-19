@@ -4,7 +4,7 @@ import pygame
 from mod import show_text  # холст, текст, шрифт, размер, цвет (кортедж), позиция (кортедж)
 from mod import load_image  # путь, прозроачность
 from mod import Xitori
-https://github.com/Alexandra2027/our_project/blob/main/main.py
+
 if __name__ == '__main__':
     pygame.init()
     size = width, height = 800, 800
