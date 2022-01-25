@@ -5,7 +5,7 @@ from mod import show_text  # холст, текст, шрифт, размер, �
 from mod import load_image  # путь, прозроачность
 from mod import Xitori
 from mod import KeyBord
-from mod import MainWindow, Regitration, level1
+from mod import MainWindow, Regitration, level1, level11
 import sqlite3
 
 
@@ -140,6 +140,10 @@ if __name__ == '__main__':
         elif level == 1:
             window = level1(screen)
             window.drawing()
+        elif level == 1.1 and f:
+            window = level11(screen)
+            window.drawing()
+            f = False
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -425,8 +429,10 @@ if __name__ == '__main__':
                         show_text(screen, login_text, 'comicsansms', 30, (204, 204, 204), (450, 200))
                     pygame.display.flip()
                 elif level == 1:
-                    print(window.get_click(event.pos))
                     if window.get_click(event.pos) == 1:
                         level = 1.1
+                        f = True
+                elif level == 1.1:
+                    window.click(event)
     pygame.quit()
 
