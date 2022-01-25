@@ -1,0 +1,88 @@
+import pygame
+import sys
+
+
+def winner(a, symbol):
+    zero = 0
+    for row in a:
+        zero += row.count(0)
+        if row.count(symbol) == 3:
+            return symbol
+    for col in range(3):
+        if a[0][col] == symbol and a[1][col] == symbol and a[2][col] == symbol:
+            return symbol
+    if a[0][0] == symbol and a[1][1] == symbol and a[2][2] == symbol:
+        return symbol
+    if a[0][2] == symbol and a[1][1] == symbol and a[2][0] == symbol:
+        return symbol
+    if zero == 0:
+        return 'Ничья'
+    return False
+
+
+if __name__ == '__main__':
+    pygame.init()
+    size_block = 150
+    line_thickness = 25
+    width = length = size_block * 3 + line_thickness * 4
+    size = width, length
+    running = True
+    screen = pygame.display.set_mode(size)
+    pygame.display.set_caption('Крестики-нолики')
+    black = (0, 0, 0)
+    red = (255, 0, 0)
+    green = (0, 255, 0)
+    white = (255, 255, 255)
+    a = [[0] * 3 for i in range(3)]
+    b = 0
+    over = False
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit(0)
+            elif event.type == pygame.MOUSEBUTTONDOWN and not over:
+                x, y = pygame.mouse.get_pos()
+                col = x // (size_block + line_thickness)
+                row = y // (size_block + line_thickness)
+                if a[row][col] == 0:
+                    if b % 2 == 0:
+                        a[row][col] = 'X победил'
+                    else:
+                        a[row][col] = 'O победил'
+                    b += 1
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                over = False
+                a = [[0] * 3 for i in range(3)]
+                b = 0
+                screen.fill(black)
+        if not over:
+            for row in range(3):
+                for col in range(3):
+                    if a[row][col] == 'X победил':
+                        color = red
+                    elif a[row][col] == 'O победил':
+                        color = green
+                    else:
+                        color = white
+                    x = col * size_block + (col + 1) * line_thickness
+                    y = row * size_block + (row + 1) * line_thickness
+                    pygame.draw.rect(screen, color, (x, y, size_block, size_block))
+                    if color == red:
+                        pygame.draw.line(screen, white, (x + 5, y + 5), (x + size_block - 5, y + size_block - 5), 3)
+                        pygame.draw.line(screen, white, (x + size_block - 5, y + 5), (x + 5, y + size_block - 5), 3)
+                    elif color == green:
+                        pygame.draw.circle(screen, white, (x + size_block // 2, y + size_block // 2), size_block // 2 - 5, 3)
+            if (b - 1) % 2 == 0:
+                over = winner(a, 'X победил')
+            else:
+                over = winner(a, 'O победил')
+        if over:
+            screen.fill(black)
+            c = pygame.font.SysFont('stxingkai', 80)
+            text = c.render(over, True, white)
+            text_rect = text.get_rect()
+            text_x = screen.get_width() / 2 - text_rect.width / 2
+            text_y = screen.get_height() / 2 - text_rect.height / 2
+            screen.blit(text, (text_x, text_y))
+        pygame.display.update()
