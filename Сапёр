@@ -129,6 +129,8 @@ def click(event):
         # c.itemconfig(CURRENT, fill="red")
         for i in mines:
             c.itemconfig(i, fill="red")
+        c.bind("<Button-1>", 'disabled')
+        c.bind("<Button-3>", 'disabled')
     elif ids not in clicked:
         clearance(ids)
         c.itemconfig(CURRENT, fill="green")
