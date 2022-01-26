@@ -2,7 +2,7 @@ from tkinter import *
 import random
 
 
-a = 20 #  Размер поля
+a = 20 # Размер поля
 b = 20 # Размер клетки
 c = 40 # Количество мин на поле
 mines = set(random.sample(range(1, a ** 2 + 1), c)) # Устанавливаем случайным образом мины на поле
