@@ -14,6 +14,7 @@ if __name__ == '__main__':
     size = width, height = 800, 800
     running = True
     screen = pygame.display.set_mode(size)
+    pygame.display.set_caption('Мир-головоломок')
     level = 0
     while running:
         if level == 0:
@@ -435,7 +436,7 @@ if __name__ == '__main__':
                         level = 1.1
                         f = True
                 elif level == 1.1:
+                    all_sprites.update(event)
                     all_sprites.draw(screen)
                     pygame.display.flip()
     pygame.quit()
-
