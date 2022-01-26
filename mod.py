@@ -254,10 +254,6 @@ class level11:
         self.all_sprites.draw(self.screen)
         pygame.display.flip()
 
-    def click(self, ev):
-        self.all_sprites.update(ev)
-
-
 
 class Bomb(pygame.sprite.Sprite):
     image = pygame.image.load(os.path.join('data/level 1', "bomb.png"))
@@ -269,15 +265,15 @@ class Bomb(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         x = random.randrange(0, 7) * (800 // 7)
         y = random.randrange(0, 7) * (800 // 7)
-        if not [(x, y), 0] in a:
+        if not (x, y) in a:
             self.rect.x = x
             self.rect.y = y
-            a.append([(x, y), 0])
+            a.append((x, y))
 
     def update(self, *args):
-        if args and args[0].type == pygame.MOUSEBUTTONDOWN and \
-           self.rect.collidepoint(args[0].pos):
+        if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
             self.image = self.image_boom
+
 
 def draw_image(screen, pos, img, size):
     img = Image.open(img)
@@ -288,4 +284,3 @@ def draw_image(screen, pos, img, size):
 def PIL_draw(screen, img, pos):
     pygame_img = pygame.image.fromstring(img.tobytes(), img.size, "RGB")
     screen.blit(pygame_img, pos)
-
