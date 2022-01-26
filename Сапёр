@@ -2,10 +2,10 @@ from tkinter import *
 import random
 
 
-GRID_SIZE = 20 #  Размер поля
-SQUARE_SIZE = 20 # Размер клетки
-MINES_NUM = 40 # Количество мин на поле
-mines = set(random.sample(range(1, GRID_SIZE**2+1), MINES_NUM)) # Устанавливаем случайным образом мины на поле
+a = 20 #  Размер поля
+b = 20 # Размер клетки
+c = 40 # Количество мин на поле
+mines = set(random.sample(range(1, a ** 2 + 1), c)) # Устанавливаем случайным образом мины на поле
 clicked = set() # Сет, хранящий все клетки, по которым мы кликнули
 
 
@@ -18,37 +18,37 @@ def check_mines(neighbors):
 def generate_neighbors(square):
     # Левая верхняя клетка
     if square == 1:
-        data = {GRID_SIZE + 1, 2, GRID_SIZE + 2}
+        data = {a + 1, 2, a + 2}
     # Правая нижняя
-    elif square == GRID_SIZE ** 2:
-        data = {square - GRID_SIZE, square - 1, square - GRID_SIZE - 1}
+    elif square == a ** 2:
+        data = {square - a, square - 1, square - a - 1}
     # Левая нижняя
-    elif square == GRID_SIZE:
-        data = {GRID_SIZE - 1, GRID_SIZE * 2, GRID_SIZE * 2 - 1}
+    elif square == a:
+        data = {a - 1, a * 2, a * 2 - 1}
     # Верхняя правая
-    elif square == GRID_SIZE ** 2 - GRID_SIZE + 1:
-        data = {square + 1, square - GRID_SIZE, square - GRID_SIZE + 1}
+    elif square == a ** 2 - a + 1:
+        data = {square + 1, square - a, square - a + 1}
     # Клетка в левом ряду
-    elif square < GRID_SIZE:
-        data = {square + 1, square - 1, square + GRID_SIZE,
-                square + GRID_SIZE - 1, square + GRID_SIZE + 1}
+    elif square < a:
+        data = {square + 1, square - 1, square + a,
+                square + a - 1, square + a + 1}
     # Клетка в правом ряду
-    elif square > GRID_SIZE ** 2 - GRID_SIZE:
-        data = {square + 1, square - 1, square - GRID_SIZE,
-                square - GRID_SIZE - 1, square - GRID_SIZE + 1}
+    elif square > a ** 2 - a:
+        data = {square + 1, square - 1, square - a,
+                square - a - 1, square - a + 1}
     # Клетка в нижнем ряду
-    elif square % GRID_SIZE == 0:
-        data = {square + GRID_SIZE, square - GRID_SIZE, square - 1,
-                square + GRID_SIZE - 1, square - GRID_SIZE - 1}
+    elif square % a == 0:
+        data = {square + a, square - a, square - 1,
+                square + a - 1, square - a - 1}
     # Клетка в верхнем ряду
-    elif square % GRID_SIZE == 1:
-        data = {square + GRID_SIZE, square - GRID_SIZE, square + 1,
-                square + GRID_SIZE + 1, square - GRID_SIZE + 1}
+    elif square % a == 1:
+        data = {square + a, square - a, square + 1,
+                square + a + 1, square - a + 1}
     # Любая другая клетка
     else:
-        data = {square - 1, square + 1, square - GRID_SIZE, square + GRID_SIZE,
-                square - GRID_SIZE - 1, square - GRID_SIZE + 1,
-                square + GRID_SIZE + 1, square + GRID_SIZE - 1}
+        data = {square - 1, square + 1, square - a, square + a,
+                square - a - 1, square - a + 1,
+                square + a + 1, square + a - 1}
     return data
 
 
@@ -79,10 +79,10 @@ def clearance(ids):
                     # Получаем координаты этой клетки
                     x1, y1, x2, y2 = c.coords(item)
                     # Пишем на клетке количество мин вокруг
-                    c.create_text(x1 + SQUARE_SIZE / 2,
-                                  y1 + SQUARE_SIZE / 2,
+                    c.create_text(x1 + b / 2,
+                                  y1 + b / 2,
                                   text=str(item_around),
-                                  font="Arial {}".format(int(SQUARE_SIZE / 2)),
+                                  font="Arial {}".format(int(b / 2)),
                                   fill='yellow')
             # Если в соседних клетках мин нету
             else:
@@ -97,10 +97,10 @@ def clearance(ids):
         # Высчитываем координаты клетки
         x1, y1, x2, y2 = c.coords(ids)
         # Пишем количество мин вокруг
-        c.create_text(x1 + SQUARE_SIZE / 2,
-                      y1 + SQUARE_SIZE / 2,
+        c.create_text(x1 + b / 2,
+                      y1 + b / 2,
                       text=str(around),
-                      font="Arial {}".format(int(SQUARE_SIZE / 2)),
+                      font="Arial {}".format(int(b / 2)),
                       fill='yellow')
 
 
@@ -112,10 +112,10 @@ def rec_clearance(ids):
     if around:
         x1, y1, x2, y2 = c.coords(ids)
         c.itemconfig(ids, fill="green")
-        c.create_text(x1 + SQUARE_SIZE / 2,
-                      y1 + SQUARE_SIZE / 2,
+        c.create_text(x1 + b / 2,
+                      y1 + b / 2,
                       text=str(around),
-                      font="Arial {}".format(int(SQUARE_SIZE / 2)),
+                      font="Arial {}".format(int(b / 2)),
                       fill='yellow')
     else:
         for item in set(neighbors).difference(clicked):
@@ -146,13 +146,11 @@ def mark_mine(event):
 
 screen = Tk()
 screen.title("Сапёр")
-c = Canvas(screen, width=GRID_SIZE * SQUARE_SIZE, height=GRID_SIZE * SQUARE_SIZE)
+c = Canvas(screen, width = a * b, height = a * b)
 c.bind("<Button-1>", click)
 c.bind("<Button-3>", mark_mine)
 c.pack()
-for i in range(GRID_SIZE):
-    for j in range(GRID_SIZE):
-        c.create_rectangle(i * SQUARE_SIZE, j * SQUARE_SIZE,
-                         i * SQUARE_SIZE + SQUARE_SIZE,
-                         j * SQUARE_SIZE + SQUARE_SIZE, fill='gray')
+for i in range(a):
+    for j in range(a):
+        c.create_rectangle(i * b, j * b, i * b + b, j * b + b, fill='gray')
 screen.mainloop()
