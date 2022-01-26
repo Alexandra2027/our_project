@@ -242,14 +242,12 @@ class level1:
 
 
 class level11:
-    def __init__(self, screen):
+    def __init__(self, screen, alls):
         self.screen = screen
-        self.all_sprites = None
+        self.all_sprites = alls
 
     def drawing(self):
         a = []
-        self.all_sprites = pygame.sprite.Group()
-        sprite = pygame.sprite.Sprite()
         while len(a) < 25:
             Bomb(self.all_sprites, a)
         self.screen.fill((150, 150, 150))
@@ -260,12 +258,8 @@ class level11:
         self.all_sprites.update(ev)
 
 
+
 class Bomb(pygame.sprite.Sprite):
-    fullname = os.path.join('data/level 1', "bomb.png")
-    fullname1 = os.path.join('data/level 1', "boom.png")
-    if not os.path.isfile(fullname) or not os.path.isfile(fullname1):
-        print("Файл с изображением не найден")
-        sys.exit()
     image = pygame.image.load(os.path.join('data/level 1', "bomb.png"))
     image_boom = pygame.image.load(os.path.join('data/level 1', "boom.png"))
 
@@ -275,17 +269,15 @@ class Bomb(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         x = random.randrange(0, 7) * (800 // 7)
         y = random.randrange(0, 7) * (800 // 7)
-        if not (x, y) in a:
+        if not [(x, y), 0] in a:
             self.rect.x = x
             self.rect.y = y
-            a.append((x, y))
+            a.append([(x, y), 0])
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and \
            self.rect.collidepoint(args[0].pos):
             self.image = self.image_boom
-            pygame.display.flip()
-
 
 def draw_image(screen, pos, img, size):
     img = Image.open(img)
