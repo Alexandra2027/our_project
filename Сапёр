@@ -126,7 +126,9 @@ def rec_clearance(ids):
 def click(event):
     ids = c.find_withtag(CURRENT)[0]
     if ids in mines:
-        c.itemconfig(CURRENT, fill="red")
+        # c.itemconfig(CURRENT, fill="red")
+        for i in mines:
+            c.itemconfig(i, fill="red")
     elif ids not in clicked:
         clearance(ids)
         c.itemconfig(CURRENT, fill="green")
