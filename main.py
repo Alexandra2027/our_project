@@ -1,12 +1,66 @@
-import os
-import sys
 import pygame
+import sys
+import time
+import random
+from pygame.locals import *
+from moves import *
 from mod import show_text  # холст, текст, шрифт, размер, цвет (кортедж), позиция (кортедж)
 from mod import load_image  # путь, прозроачность
 from mod import Xitori
 from mod import KeyBord
-from mod import MainWindow, Regitration, level1, level11
+from mod import MainWindow, Regitration, level1, level11, level2
 import sqlite3
+
+pygame.init()
+font1 = pygame.font.SysFont(None, 50)
+WHITE = (255, 255, 255)
+GREEN = (77, 204, 0)
+RED = (255, 0, 0)
+BLUE = (0, 0, 255)
+
+
+def buildText(board, i, j):
+    if board[j][i] == "0":
+        text = font1.render(" ", True, BLUE)
+    else:
+        text = font1.render(board[j][i], True, BLUE)
+    textRect = text.get_rect()
+    textRect.centerx = i * 100 + 75
+    textRect.centery = j * 100 + 180
+    return text, textRect
+
+
+def showText(board):
+    for i in range(4):
+        for j in range(4):
+            screen.blit(buildText(board, i, j)[0], buildText(board, i, j)[1])
+
+
+def game_over():
+    label = font1.render("GAME OVER", True, RED)
+    labelRect = label.get_rect()
+    labelRect.centerx = window.get_rect().centerx
+    labelRect.centery = window.get_rect().centery
+    window.blit(label, labelRect)
+    event = pygame.event.wait()
+    quitWindow(event)
+
+
+def win():
+    window.fill(WHITE)
+    label = font1.render("You WIN!!!!!", True, RED)
+    labelRect = label.get_rect()
+    labelRect.centerx = window.get_rect().centerx
+    labelRect.centery = window.get_rect().centery
+    window.blit(label, labelRect)
+    event = pygame.event.wait()
+    quitWindow(event)
+
+
+def quitWindow(event):
+    if event.type == QUIT:
+        pygame.quit()
+        sys.exit()
 
 
 if __name__ == '__main__':
@@ -147,6 +201,28 @@ if __name__ == '__main__':
             window = level11(screen, all_sprites)
             window.drawing()
             f = False
+        elif level == 2:
+            window = level2(screen)
+            window.drawing()
+        elif level == 2.1:
+            board = init_board()
+            blocks = []
+            for i in range(4):
+                for j in range(4):
+                    blocks.append([pygame.Rect((i * 100) + 30, (j * 100) + 135, 90, 90), WHITE])
+            screen.fill(WHITE)
+            header = font1.render("2048", True, BLUE)
+            screen.blit(header, (30, 50))
+            pygame.draw.rect(screen, GREEN, pygame.Rect(20, 125, 410, 410))
+            for block in blocks:
+                pygame.draw.rect(screen, block[1], block[0])
+            showText(board)
+            if checkLose(board):
+                game_over()
+            elif checkWin(board):
+                win()
+            pygame.display.update()
+            time.sleep(0.02)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -439,4 +515,16 @@ if __name__ == '__main__':
                     all_sprites.update(event)
                     all_sprites.draw(screen)
                     pygame.display.flip()
+                elif level == 2:
+                    if window.get_click(event.pos) == 1:
+                        level = 2.1
+            if event.type == KEYDOWN:
+                if event.key == K_UP:
+                    board = main(board, "u")
+                if event.key == K_DOWN:
+                    board = main(board, "d")
+                if event.key == K_LEFT:
+                    board = main(board, "l")
+                if event.key == K_RIGHT:
+                    board = main(board, "r")
     pygame.quit()
