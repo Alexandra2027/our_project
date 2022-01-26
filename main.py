@@ -141,7 +141,9 @@ if __name__ == '__main__':
             window = level1(screen)
             window.drawing()
         elif level == 1.1 and f:
-            window = level11(screen)
+            all_sprites = pygame.sprite.Group()
+            sprite = pygame.sprite.Sprite()
+            window = level11(screen, all_sprites)
             window.drawing()
             f = False
         for event in pygame.event.get():
@@ -433,6 +435,7 @@ if __name__ == '__main__':
                         level = 1.1
                         f = True
                 elif level == 1.1:
-                    window.click(event)
+                    all_sprites.draw(screen)
+                    pygame.display.flip()
     pygame.quit()
 
