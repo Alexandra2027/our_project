@@ -196,11 +196,15 @@ if __name__ == '__main__':
             window.drawing()
             f = False
         elif level == 2:
+            cur.execute("UPDATE login SET level = ? WHERE login == ?", (level, login))
+            con.commit()
             window = level2(screen)
             window.drawing()
         elif level == 2.1:
-            board = init_board()
             blocks = []
+            if f:
+                board = init_board()
+                f = False
             for i in range(4):
                 for j in range(4):
                     blocks.append([pygame.Rect((i * 100) + 30, (j * 100) + 135, 90, 90), WHITE])
@@ -213,17 +217,25 @@ if __name__ == '__main__':
             showText(board)
             if checkLose(board):
                 game_over()
+                time.sleep(3.5)
+                f = True
             elif checkWin(board):
                 win()
+                time.sleep(3.5)
+                level = 3
             pygame.display.update()
             time.sleep(0.2)
         elif level == 3:
+            cur.execute("UPDATE login SET level = ? WHERE login == ?", (level, login))
+            con.commit()
             window = level3(screen)
             window.drawing()
         elif level == 3.1:
             screen.fill((130, 255, 220))
             pygame.display.flip()
         elif level == 4:
+            cur.execute("UPDATE login SET level = ? WHERE login == ?", (level, login))
+            con.commit()
             window = level4(screen)
             window.drawing()
         elif level == 4.1 and f:
@@ -545,6 +557,7 @@ if __name__ == '__main__':
                 elif level == 2:
                     if window.get_click(event.pos) == 1:
                         level = 2.1
+                        f = True
                 elif level == 3:
                     if window.get_click(event.pos) == 1:
                         level = 3.1
