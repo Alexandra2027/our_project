@@ -39,6 +39,7 @@ def showText(board):
 def game_over():
     label = font1.render("GAME OVER", True, RED)
     screen.blit(label, (120, 70))
+    event = pygame.event.wait()
     quitWindow(event)
 
 
