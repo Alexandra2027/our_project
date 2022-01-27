@@ -8,7 +8,7 @@ from mod import show_text  # холст, текст, шрифт, размер, �
 from mod import load_image  # путь, прозроачность
 from mod import Xitori
 from mod import KeyBord
-from mod import MainWindow, Regitration, level1, level11, level2, level3, level4
+from mod import MainWindow, Regitration, level1, level11, level2, level3, level4, level5
 import sqlite3
 
 pygame.init()
@@ -225,6 +225,30 @@ if __name__ == '__main__':
             pygame.display.flip()
         elif level == 4:
             window = level4(screen)
+            window.drawing()
+        elif level == 4.1 and f:
+            screen.fill((0, 0, 0))
+            board = Xitori(1)
+            board.set_view(200, 200, 100)
+            board.render(screen)
+            pygame.display.flip()
+            f = False
+        elif level == 4.2 and f:
+            screen.fill((0, 0, 0))
+            board = Xitori(2)
+            board.set_view(180, 180, 100)
+            board.render(screen)
+            pygame.display.flip()
+            f = False
+        elif level == 4.3 and f:
+            screen.fill((0, 0, 0))
+            board = Xitori(3)
+            board.set_view(150, 150, 100)
+            board.render(screen)
+            pygame.display.flip()
+            f = False
+        elif level == 5:
+            window = level5(screen)
             window.drawing()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -524,7 +548,31 @@ if __name__ == '__main__':
                 elif level == 3:
                     if window.get_click(event.pos) == 1:
                         level = 3.1
-
+                elif level == 4:
+                    if window.get_click(event.pos) == 1:
+                        level = 4.1
+                        f = True
+                elif level == 4.1:
+                    board.get_click(event.pos)
+                    board.render(screen)
+                    if board.is_win() == 1:
+                        level = 4.2
+                        f = True
+                    pygame.display.flip()
+                elif level == 4.2:
+                    board.get_click(event.pos)
+                    board.render(screen)
+                    if board.is_win() == 1:
+                        level = 4.3
+                        f = True
+                    pygame.display.flip()
+                elif level == 4.3:
+                    board.get_click(event.pos)
+                    board.render(screen)
+                    if board.is_win() == 1:
+                        level = 5
+                        f = True
+                    pygame.display.flip()
             if event.type == KEYDOWN:
                 if event.key == K_UP:
                     board = main(board, "u")
