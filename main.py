@@ -8,7 +8,7 @@ from mod import show_text  # холст, текст, шрифт, размер, �
 from mod import load_image  # путь, прозроачность
 from mod import Xitori
 from mod import KeyBord
-from mod import MainWindow, Regitration, level1, level11, level2
+from mod import MainWindow, Regitration, level1, level11, level2, level3, level4
 import sqlite3
 
 pygame.init()
@@ -38,21 +38,14 @@ def showText(board):
 
 def game_over():
     label = font1.render("GAME OVER", True, RED)
-    labelRect = label.get_rect()
-    labelRect.centerx = window.get_rect().centerx
-    labelRect.centery = window.get_rect().centery
-    window.blit(label, labelRect)
-    event = pygame.event.wait()
+    screen.blit(label, (120, 70))
     quitWindow(event)
 
 
 def win():
-    window.fill(WHITE)
-    label = font1.render("You WIN!!!!!", True, RED)
-    labelRect = label.get_rect()
-    labelRect.centerx = window.get_rect().centerx
-    labelRect.centery = window.get_rect().centery
-    window.blit(label, labelRect)
+    screen.fill(WHITE)
+    label = font1.render("You WIN!!", True, RED)
+    screen.blit(label, (120, 70))
     event = pygame.event.wait()
     quitWindow(event)
 
@@ -212,7 +205,7 @@ if __name__ == '__main__':
                     blocks.append([pygame.Rect((i * 100) + 30, (j * 100) + 135, 90, 90), WHITE])
             screen.fill(WHITE)
             header = font1.render("2048", True, BLUE)
-            screen.blit(header, (30, 50))
+            screen.blit(header, (180, 30))
             pygame.draw.rect(screen, GREEN, pygame.Rect(20, 125, 410, 410))
             for block in blocks:
                 pygame.draw.rect(screen, block[1], block[0])
@@ -222,7 +215,16 @@ if __name__ == '__main__':
             elif checkWin(board):
                 win()
             pygame.display.update()
-            time.sleep(0.02)
+            time.sleep(0.2)
+        elif level == 3:
+            window = level3(screen)
+            window.drawing()
+        elif level == 3.1:
+            screen.fill((130, 255, 220))
+            pygame.display.flip()
+        elif level == 4:
+            window = level4(screen)
+            window.drawing()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -518,6 +520,10 @@ if __name__ == '__main__':
                 elif level == 2:
                     if window.get_click(event.pos) == 1:
                         level = 2.1
+                elif level == 3:
+                    if window.get_click(event.pos) == 1:
+                        level = 3.1
+
             if event.type == KEYDOWN:
                 if event.key == K_UP:
                     board = main(board, "u")
