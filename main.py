@@ -260,6 +260,8 @@ if __name__ == '__main__':
             pygame.display.flip()
             f = False
         elif level == 5:
+            cur.execute("UPDATE login SET level = ? WHERE login == ?", (level, login))
+            con.commit()
             window = level5(screen)
             window.drawing()
         for event in pygame.event.get():
