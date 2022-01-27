@@ -302,7 +302,6 @@ if __name__ == '__main__':
                 text_x = screen.get_width() / 2 - text_rect.width / 2
                 text_y = screen.get_height() / 2 - text_rect.height / 2
                 screen.blit(text, (text_x, text_y))
-                time.sleep(2)
                 level = 4
             pygame.display.update()
         elif level == 4:
