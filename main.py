@@ -10,7 +10,6 @@ from mod import Xitori
 from mod import KeyBord
 from mod import MainWindow, Regitration, level1, level11, level2, level3, level4, level5
 import sqlite3
-
 pygame.init()
 font1 = pygame.font.SysFont(None, 50)
 WHITE = (255, 255, 255)
@@ -455,7 +454,7 @@ if __name__ == '__main__':
                             if not bool(result):
                                 show_text(screen, 'Регистрация прошла успешно', 'comicsansms', 40, (204, 204, 204), (50, 450))
                                 a = False
-                                cur.execute('''INSERT INTO login VALUES (?, ?, ?)''', (login, password, 1))
+                                cur.execute('''INSERT INTO login VALUES (?, ?, ?)''', (login, password, 2))
                                 con.commit()
                             else:
                                 show_text(screen, 'Такой логин уже есть', 'comicsansms', 40, (204, 204, 204), (50, 450))
