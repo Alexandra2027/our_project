@@ -364,7 +364,6 @@ class Bomb(pygame.sprite.Sprite):
             print('W')
 
 
-
 def draw_image(screen, pos, img, size):
     img = Image.open(img)
     img.thumbnail((size, size))
