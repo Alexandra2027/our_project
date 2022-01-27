@@ -1,20 +1,29 @@
 import pygame
 import sys
+import random
 
 
 def winner(a, symbol):
     zero = 0
-    for row in a:
-        zero += row.count(0)
-        if row.count(symbol) == 3:
+    w = []
+    for i in range(3):
+        for j in range(3):
+            if a[i][j] == 0:
+                zero += 1
+    for n in range(3):
+        if a[0][n] == symbol and a[1][n] == symbol and a[2][n] == symbol:
+            w.append('col')
             return symbol
-    for col in range(3):
-        if a[0][col] == symbol and a[1][col] == symbol and a[2][col] == symbol:
+        if a[n][0] == symbol and a[n][1] == symbol and a[n][2] == symbol:
+            w.append('row')
             return symbol
     if a[0][0] == symbol and a[1][1] == symbol and a[2][2] == symbol:
+        w.append('ld')
         return symbol
     if a[0][2] == symbol and a[1][1] == symbol and a[2][0] == symbol:
+        w.append('rd')
         return symbol
+    #  print(w)
     if zero == 0:
         return 'Ничья'
     return False
@@ -32,9 +41,9 @@ if __name__ == '__main__':
     black = (0, 0, 0)
     red = (255, 0, 0)
     green = (0, 255, 0)
+    blue = (0, 0, 255)
     white = (255, 255, 255)
     a = [[0] * 3 for i in range(3)]
-    b = 0
     over = False
     while running:
         for event in pygame.event.get():
@@ -46,15 +55,14 @@ if __name__ == '__main__':
                 col = x // (size_block + line_thickness)
                 row = y // (size_block + line_thickness)
                 if a[row][col] == 0:
-                    if b % 2 == 0:
-                        a[row][col] = 'X победил'
-                    else:
-                        a[row][col] = 'O победил'
-                    b += 1
+                    a[row][col] = 'X победил'
+                while a[row][col] != 0:
+                    row = random.randint(0, 2)
+                    col = random.randint(0, 2)
+                a[row][col] = 'O победил'
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 over = False
                 a = [[0] * 3 for i in range(3)]
-                b = 0
                 screen.fill(black)
         if not over:
             for row in range(3):
@@ -73,14 +81,13 @@ if __name__ == '__main__':
                         pygame.draw.line(screen, white, (x + size_block - 5, y + 5), (x + 5, y + size_block - 5), 3)
                     elif color == green:
                         pygame.draw.circle(screen, white, (x + size_block // 2, y + size_block // 2), size_block // 2 - 5, 3)
-            if (b - 1) % 2 == 0:
-                over = winner(a, 'X победил')
-            else:
+            over = winner(a, 'X победил')
+            if not over:
                 over = winner(a, 'O победил')
         if over:
-            screen.fill(black)
+            #  screen.fill(black)
             c = pygame.font.SysFont('stxingkai', 80)
-            text = c.render(over, True, white)
+            text = c.render(over, True, blue)
             text_rect = text.get_rect()
             text_x = screen.get_width() / 2 - text_rect.width / 2
             text_y = screen.get_height() / 2 - text_rect.height / 2
