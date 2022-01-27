@@ -270,6 +270,36 @@ class level2:
             return None
 
 
+class level3:
+    def __init__(self, screen):
+        self.screen = screen
+
+    def drawing(self):
+        draw_image(self.screen, (0, 0,), 'data/level 3/fon.png', 800)
+        pygame.display.flip()
+
+    def get_click(self, mouse_pos):
+        if mouse_pos[0] >= 370 and mouse_pos[0] <= 670 and mouse_pos[1] >= 0 and mouse_pos[1] <= 410:
+            return 1
+        else:
+            return None
+
+
+class level4:
+    def __init__(self, screen):
+        self.screen = screen
+
+    def drawing(self):
+        draw_image(self.screen, (0, 0,), 'data/level 4/fon.png', 800)
+        
+        pygame.display.flip()
+
+    def get_click(self, mouse_pos):
+        if mouse_pos[0] >= 370 and mouse_pos[0] <= 670 and mouse_pos[1] >= 0 and mouse_pos[1] <= 410:
+            return 1
+        else:
+            return None
+
 class Bomb(pygame.sprite.Sprite):
     image = pygame.image.load(os.path.join('data/level 1', "bomb.png"))
     image_boom = pygame.image.load(os.path.join('data/level 1', "boom.png"))
