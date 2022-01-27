@@ -19,6 +19,31 @@ RED = (255, 0, 0)
 BLUE = (0, 0, 255)
 
 
+def winner(a, symbol):
+    zero = 0
+    w = []
+    for i in range(3):
+        for j in range(3):
+            if a[i][j] == 0:
+                zero += 1
+    for n in range(3):
+        if a[0][n] == symbol and a[1][n] == symbol and a[2][n] == symbol:
+            w.append('col')
+            return symbol
+        if a[n][0] == symbol and a[n][1] == symbol and a[n][2] == symbol:
+            w.append('row')
+            return symbol
+    if a[0][0] == symbol and a[1][1] == symbol and a[2][2] == symbol:
+        w.append('ld')
+        return symbol
+    if a[0][2] == symbol and a[1][1] == symbol and a[2][0] == symbol:
+        w.append('rd')
+        return symbol
+    if zero == 0:
+        return 'Ничья'
+    return False
+
+
 def buildText(board, i, j):
     if board[j][i] == "0":
         text = font1.render(" ", True, BLUE)
@@ -230,10 +255,58 @@ if __name__ == '__main__':
             con.commit()
             window = level3(screen)
             window.drawing()
-        elif level == 3.1:
-            screen.fill((130, 255, 220))
+        elif level == 3.1 and f:
+            screen.fill((0, 0, 0))
+            size_block = 150
+            line_thickness = 25
+            width = length = size_block * 3 + line_thickness * 4
+            size = width, length
+            running = True
+            screen = pygame.display.set_mode(size)
+            pygame.display.set_caption('Крестики-нолики')
+            black = (0, 0, 0)
+            red = (255, 0, 0)
+            green = (0, 255, 0)
+            blue = (0, 0, 255)
+            white = (255, 255, 255)
+            a = [[0] * 3 for i in range(3)]
+            over = False
+            f = False
             pygame.display.flip()
+        elif level == 3.1:
+            if not over:
+                for row in range(3):
+                    for col in range(3):
+                        if a[row][col] == 'X победил':
+                            color = red
+                        elif a[row][col] == 'O победил':
+                            color = green
+                        else:
+                            color = white
+                        x = col * size_block + (col + 1) * line_thickness
+                        y = row * size_block + (row + 1) * line_thickness
+                        pygame.draw.rect(screen, color, (x, y, size_block, size_block))
+                        if color == red:
+                            pygame.draw.line(screen, white, (x + 5, y + 5), (x + size_block - 5, y + size_block - 5), 3)
+                            pygame.draw.line(screen, white, (x + size_block - 5, y + 5), (x + 5, y + size_block - 5), 3)
+                        elif color == green:
+                            pygame.draw.circle(screen, white, (x + size_block // 2, y + size_block // 2),
+                                               size_block // 2 - 5, 3)
+                over = winner(a, 'X победил')
+                if not over:
+                    over = winner(a, 'O победил')
+            if over:
+                #  screen.fill(black)
+                c = pygame.font.SysFont('stxingkai', 80)
+                text = c.render(over, True, blue)
+                text_rect = text.get_rect()
+                text_x = screen.get_width() / 2 - text_rect.width / 2
+                text_y = screen.get_height() / 2 - text_rect.height / 2
+                screen.blit(text, (text_x, text_y))
+            pygame.display.update()
         elif level == 4:
+            size = width, height = 800, 800
+            screen = pygame.display.set_mode(size)
             cur.execute("UPDATE login SET level = ? WHERE login == ?", (level, login))
             con.commit()
             window = level4(screen)
@@ -563,6 +636,18 @@ if __name__ == '__main__':
                 elif level == 3:
                     if window.get_click(event.pos) == 1:
                         level = 3.1
+                        f = True
+                elif level == 3.1:
+                    if not over:
+                        x, y = pygame.mouse.get_pos()
+                        col = x // (size_block + line_thickness)
+                        row = y // (size_block + line_thickness)
+                        if a[row][col] == 0:
+                            a[row][col] = 'X победил'
+                        while a[row][col] != 0:
+                            row = random.randint(0, 2)
+                            col = random.randint(0, 2)
+                        a[row][col] = 'O победил'
                 elif level == 4:
                     if window.get_click(event.pos) == 1:
                         level = 4.1
@@ -597,4 +682,8 @@ if __name__ == '__main__':
                     board = main(board, "l")
                 if event.key == K_RIGHT:
                     board = main(board, "r")
+                if event.key == pygame.K_SPACE and level == 3.1:
+                    over = False
+                    a = [[0] * 3 for i in range(3)]
+                    screen.fill(black)
     pygame.quit()
