@@ -5,6 +5,11 @@ import sqlite3
 from PIL import Image
 import random
 
+num_3 = [[2, 1, 1], [4, 1, 5], [2, 5, 5]]
+num_4 = [[3, 4, 1, 2], [3, 1, 2, 4], [1, 1, 4, 3], [4, 3, 2, 4]]
+num_5 = [[2, 1, 4, 3, 5], [2, 5, 5, 3, 4], [5, 5, 2, 1, 3],
+         [4, 2, 3, 4, 1], [4, 3, 5, 4, 1]]
+
 
 def show_text(screen, text, fontname, size, color, pos):  # функция для вывода текста
     font = pygame.font.SysFont(fontname, size)
@@ -78,21 +83,38 @@ class Xitori:
         self.top = top
         self.cell_size = cell_size
 
+    def what_num(self):
+        if self.width == 3:
+            num = num_3
+        elif self.width == 4:
+            num = num_4
+        else:
+            num = num_5
+        return num
+
     def render(self, screen):
+        num = self.what_num()
         for i in range(self.width):
             for j in range(self.width):
                 if self.board[j][i] == 0:
-                    screen.fill(pygame.Color(255, 255, 255), (
-                    self.left + i * self.cell_size - 1, self.top + j * self.cell_size - 1, self.cell_size - 1,
-                    self.cell_size - 1))
+                    screen.fill(pygame.Color(255, 255, 255), (self.left + i * self.cell_size - 1,
+                                                              self.top + j * self.cell_size - 1, self.cell_size - 1,
+                                                              self.cell_size - 1))
+                    show_text(screen, str(num[j][i]), None, 50, (0, 0, 0), (self.left + i * self.cell_size - 1 + 25,
+                                                              self.top + j * self.cell_size - 1 + 25))
                 elif self.board[j][i] == 1:
-                    screen.fill(pygame.Color(241, 156, 187), (
-                    self.left + i * self.cell_size - 1, self.top + j * self.cell_size - 1, self.cell_size - 1,
-                    self.cell_size - 1))
+                    screen.fill(pygame.Color(241, 156, 187), (self.left + i * self.cell_size - 1,
+                                                              self.top + j * self.cell_size - 1, self.cell_size - 1,
+                                                              self.cell_size - 1))
+                    show_text(screen, str(num[j][i]), None, 50, (19, 0, 144), (self.left + i * self.cell_size - 1 + 25,
+                                                              self.top + j * self.cell_size - 1 + 25))
                 elif self.board[j][i] == 2:
-                    screen.fill(pygame.Color(19, 0, 144), (
-                    self.left + i * self.cell_size - 1, self.top + j * self.cell_size - 1, self.cell_size - 1,
-                    self.cell_size - 1))
+                    screen.fill(pygame.Color(19, 0, 144), (self.left + i * self.cell_size - 1,
+                                                           self.top + j * self.cell_size - 1, self.cell_size - 1,
+                                                           self.cell_size - 1))
+                    show_text(screen, str(num[j][i]), None, 50, (255, 255, 255), (self.left + i * self.cell_size - 1 + 25,
+                                                              self.top + j * self.cell_size - 1 + 25))
+
 
     def get_cell(self, mouse_pos):
         xm, ym = mouse_pos
@@ -113,13 +135,15 @@ class Xitori:
             self.board[y][x] = 2
         elif self.board[y][x] == 2:
             self.board[y][x] = 0
-        if self.board == self.board2:
-            print('win')
 
     def get_click(self, mouse_pos):
         cell = self.get_cell(mouse_pos)
         if cell != None:
             self.on_click(cell)
+
+    def is_win(self):
+        if self.board == self.board2:
+            return 1
 
 
 class KeyBord:  # Класс для клавиатуры
@@ -291,14 +315,24 @@ class level4:
 
     def drawing(self):
         draw_image(self.screen, (0, 0,), 'data/level 4/fon.png', 800)
-        
         pygame.display.flip()
 
     def get_click(self, mouse_pos):
-        if mouse_pos[0] >= 370 and mouse_pos[0] <= 670 and mouse_pos[1] >= 0 and mouse_pos[1] <= 410:
+        if mouse_pos[0] >= 600 and mouse_pos[0] <= 700 and mouse_pos[1] >= 290 and mouse_pos[1] <= 460:
             return 1
         else:
             return None
+
+
+class level5:
+    def __init__(self, screen):
+        self.screen = screen
+
+    def drawing(self):
+        draw_image(self.screen, (0, 0,), 'data/main/win.png', 800)
+        show_text(self.screen, 'Вы победили!!!', 'comicsansms', 50, (255, 236, 139), (100, 100))
+        pygame.display.flip()
+
 
 class Bomb(pygame.sprite.Sprite):
     image = pygame.image.load(os.path.join('data/level 1', "bomb.png"))
