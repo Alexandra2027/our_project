@@ -339,19 +339,30 @@ class Bomb(pygame.sprite.Sprite):
     image_boom = pygame.image.load(os.path.join('data/level 1', "boom.png"))
 
     def __init__(self, group, a):
+        self.a = a
         super().__init__(group)
         self.image = Bomb.image
         self.rect = self.image.get_rect()
         x = random.randrange(0, 7) * (800 // 7)
         y = random.randrange(0, 7) * (800 // 7)
-        if not (x, y) in a:
+        if not [(x, y), 0] in self.a:
             self.rect.x = x
             self.rect.y = y
-            a.append((x, y))
+            self.a.append([(x, y), 0])
 
     def update(self, *args):
         if args and args[0].type == pygame.MOUSEBUTTONDOWN and self.rect.collidepoint(args[0].pos):
             self.image = self.image_boom
+            for i in range(len(self.a)):
+                if args[0].pos[0] >= self.a[i][0][0] and args[0].pos[0] <= self.a[i][0][0] + 98 \
+                        and args[0].pos[1] >= self.a[i][0][1] and args[0].pos[1] <= self.a[i][0][1] + 98:
+                    self.a[i][1] = 1
+        c = 0
+        for j in range(len(self.a)):
+            c += self.a[j][1]
+        if c == 25:
+            print('W')
+
 
 
 def draw_image(screen, pos, img, size):
